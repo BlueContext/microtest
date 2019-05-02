@@ -1,0 +1,25 @@
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker kbaker
+
+Import-Module ADDSDeployment
+Install-ADDSForest -CreateDnsDelegation:$false -DatabasePath C:\Windows\NTDS -DomainMode WinThreshold -DomainName kosmopress.com -DomainNetbiosName KOSMOPRESS -ForestMode WinThreshold -InstallDns:$true -LogPath C:\Windows\NTDS -NoRebootOnCompletion:$true -SysVolPath C:\Windows\SYSVOL -Force:$true
+
+docker swarm init --advertise-addr 10.0.0.11:2377 --listen-addr 10.0.0.11:2377
+docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-24dtkncz4ga3ngaly12al1eoe 10.0.0.11:2377 --advertise-addr 10.0.0.12:2377 --listen-addr 10.0.0.12:2377
+docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-24dtkncz4ga3ngaly12al1eoe 10.0.0.11:2377 --advertise-addr 10.0.0.13:2377 --listen-addr 10.0.0.13:2377
+
+docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-d1pdxrxudg79lfubvo1ktan54 10.0.0.13:2377 --advertise-addr 10.0.0.14:2377 --listen-addr 10.0.0.14:2377
+docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-d1pdxrxudg79lfubvo1ktan54 10.0.0.13:2377 --advertise-addr 10.0.0.15:2377 --listen-addr 10.0.0.15:2377
+docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-d1pdxrxudg79lfubvo1ktan54 10.0.0.13:2377 --advertise-addr 10.0.0.16:2377 --listen-addr 10.0.0.16:2377
+
+
+docker build -t microservices.api .
+
+docker network create -d overlay ms-overlay --subnet 10.10.10.0/24
+docker service create -d -p 8080:15672 --name ms-mq --replicas 1 --network ms-overlay rabbitmq:3-management
+docker service create -d -p 8081:80 -p 8082:5000 --name ms-api --replicas 1 --network ms-overlay microservice.api:latest

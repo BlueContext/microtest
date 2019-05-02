@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "/home/kbaker/Code/MicroTest/MicroTest.Global"
+		},
+		{
+			"path": "/home/kbaker/Code/MicroTest/MicroTest.Api"
+		},
+		{
+			"path": "/home/kbaker/Code/MicroTest/MicroTest.Cache"
+		},
+		{
+			"path": "/home/kbaker/Code/MicroTest/MicroTest.FileReader"
+		},
+		{
+			"path": "/home/kbaker/Code/MicroTest/MicroTest.Queue"
+		}
+	],
+	"settings": {}
+}
