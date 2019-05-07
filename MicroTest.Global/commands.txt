@@ -17,9 +17,13 @@ docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efe
 docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-d1pdxrxudg79lfubvo1ktan54 10.0.0.13:2377 --advertise-addr 10.0.0.15:2377 --listen-addr 10.0.0.15:2377
 docker swarm join --token SWMTKN-1-5qul7alg1plqk5ew0a86vsdmngh2wlbg1exsh6cx57efeks0x4-d1pdxrxudg79lfubvo1ktan54 10.0.0.13:2377 --advertise-addr 10.0.0.16:2377 --listen-addr 10.0.0.16:2377
 
-
-docker build -t microservices.api .
-
 docker network create -d overlay ms-overlay --subnet 10.10.10.0/24
-docker service create -d -p 8080:15672 --name ms-mq --replicas 1 --network ms-overlay rabbitmq:3-management
-docker service create -d -p 8081:80 -p 8082:5000 --name ms-api --replicas 1 --network ms-overlay microservice.api:latest
+
+docker build -t microtest.api .
+docker build -t microtest.fileapi .
+
+docker push
+
+docker service create -d -p 8080:15672 --name mt-mq --replicas 1 --network ms-overlay rabbitmq:3-management
+docker service create -d -p 8081:80 -p 8082:5000 --name mt-api --replicas 1 --network ms-overlay microtest.api:latest
+docker service create -d -p 8088:80 -p 8089:5000 --name mt-fileapi --replicas 1 --network ms-overlay microtest.fileapi:latest

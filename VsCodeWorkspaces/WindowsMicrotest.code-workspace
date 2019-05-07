@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.Global"
+		},
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.Api"
+		},
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.Cache"
+		},
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.FileReader"
+		},
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.Queue"
+		},
+		{
+			"path": "C:/Users/kbaker.KOSMOPRESS/source/microtest/MicroTest.FileApi"
+		}
+	],
+	"settings": {}
+}
