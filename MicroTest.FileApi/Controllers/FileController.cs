@@ -13,11 +13,11 @@ using Newtonsoft.Json;
 namespace MicroTest.FileApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/dir")]
+    [Route("api/file")]
     public class FileController : Controller
     {
         private readonly AppConfiguration appConfiguration;
-        private readonly string userId = "GET USER HERE";
+        //private readonly string userId = "GET USER HERE";
         public FileController(IOptions<AppConfiguration> config)
         {
             appConfiguration = config.Value;
@@ -39,7 +39,7 @@ namespace MicroTest.FileApi.Controllers
                 id = @"\\" + (id.Replace(@"/", @"\"));
             }
             var file = new NtfsFile(id);
-            var result = new vmNtfsFile(file, appConfiguration.ApiRootUrl, req, userId);
+            var result = new vmNtfsFile(file, appConfiguration.ApiRootUrl, req);
             string json = JsonConvert.SerializeObject(result, Formatting.Indented);
             json = json.Replace(@"\\", @"\");
             return new ContentResult

@@ -27,3 +27,17 @@ docker push
 docker service create -d -p 8080:15672 --name mt-mq --replicas 1 --network ms-overlay rabbitmq:3-management
 docker service create -d -p 8081:80 -p 8082:5000 --name mt-api --replicas 1 --network ms-overlay microtest.api:latest
 docker service create -d -p 8088:80 -p 8089:5000 --name mt-fileapi --replicas 1 --network ms-overlay microtest.fileapi:latest
+
+gMSA Properties
+Name:	WinDockerSwarm
+DnsHostName: WinDockerSwarm.kosmopress.com 
+SPNs:	"host/WinDockerSwarm", "host/WinDockerSwarm.kosmopress.com"
+PrincipalsAllowedToRetrieveManagedPassword: DockerHosts
+
+# Create the gMSA
+New-ADServiceAccount -Name "WinDockerSwarm" -DnsHostName "WinDockerSwarm.kosmopress.com" -ServicePrincipalNames "host/WinDockerSwarm", "host/WinDockerSwarm.kosmopress.com" -PrincipalsAllowedToRetrieveManagedPassword "DockerHosts"
+
+# Add your container hosts to the security group
+Add-ADGroupMember -Identity "WebApp01Hosts" -Members "ContainerHost01", "ContainerHost02", "ContainerHost03"
+ 
+New-SmbShare -Name Drop -Path c:\shares\drop -FullAccess "Everyone"

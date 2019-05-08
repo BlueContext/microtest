@@ -19,7 +19,7 @@ namespace MicroTest.FileApi.ViewModels
         //Scan properties
         public Uri DirLink { get; set; }
         public DateTime ScanTime { get; set; }
-        public string ScanUser { get; set; }
+        //public string ScanUser { get; set; }
 
         //Directory Contents
         public Dictionary<string, Uri> ChildFiles { get; set; }
@@ -31,7 +31,7 @@ namespace MicroTest.FileApi.ViewModels
         public List<vmNtfsAccessRule> AccessControl { get; set; }
 
         //CONSTRUCTOR
-        public vmNtfsDirectory(NtfsDirectory dir, string apiRoot, string reqPath, string user)
+        public vmNtfsDirectory(NtfsDirectory dir, string apiRoot, string reqPath)
         {
             Name = dir.Name;
             FullPath = dir.FullPath;
@@ -41,7 +41,7 @@ namespace MicroTest.FileApi.ViewModels
             TerminalLeaf = dir.TerminalLeaf;
             DirLink = new Uri(apiRoot + "Dir?id=" + reqPath.Replace(@"/", @"\"));
             ScanTime = DateTime.Now;
-            ScanUser = user;
+            //ScanUser = user;
             InheritanceEnabled = dir.InheritanceEnabled;
             Owner = dir.Owner;
             ChildFiles = new Dictionary<string, Uri>();

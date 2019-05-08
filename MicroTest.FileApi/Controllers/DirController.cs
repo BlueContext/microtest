@@ -17,11 +17,11 @@ namespace MicroTest.FileApi.Controllers
     public class DirController : Controller
     {
         private readonly AppConfiguration appConfiguration;
-        private readonly string userId;
+        //private readonly string userId;
         public DirController(IOptions<AppConfiguration> config)
         {
             appConfiguration = config.Value;
-            userId = HttpContext.User.Identity.Name.ToString();
+            //userId = HttpContext.User.Identity.Name.ToString();
         }
 
         // GET: api/Dir/5
@@ -41,7 +41,7 @@ namespace MicroTest.FileApi.Controllers
 
 
             var folder = new NtfsDirectory(id);
-            var result = new vmNtfsDirectory(folder, appConfiguration.ApiRootUrl, req, userId);
+            var result = new vmNtfsDirectory(folder, appConfiguration.ApiRootUrl, req);
             string json = JsonConvert.SerializeObject(result, Formatting.Indented);
             json = json.Replace(@"\\", @"\");
 

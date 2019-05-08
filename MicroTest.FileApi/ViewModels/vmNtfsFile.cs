@@ -18,7 +18,7 @@ namespace MicroTest.FileApi.ViewModels
         //Scan properties
         public Uri FileLink { get; set; }
         public DateTime ScanTime { get; set; }
-        public string ScanUser { get; set; }
+        //public string ScanUser { get; set; }
 
         //File Security
         public bool InheritanceEnabled { get; set; }
@@ -26,7 +26,7 @@ namespace MicroTest.FileApi.ViewModels
         public List<vmNtfsAccessRule> AccessControl { get; set; }
 
         //CONSTRUCTOR
-        public vmNtfsFile(NtfsFile dir, string apiRoot, string reqPath, string user)
+        public vmNtfsFile(NtfsFile dir, string apiRoot, string reqPath)
         {
             Name = dir.Name;
             FullPath = dir.FullPath;
@@ -35,7 +35,7 @@ namespace MicroTest.FileApi.ViewModels
             LastWrite = dir.LastWrite;
             FileLink = new Uri(apiRoot + "File?id=" + reqPath);
             ScanTime = DateTime.Now;
-            ScanUser = user;
+            //ScanUser = user;
             InheritanceEnabled = dir.InheritanceEnabled;
             Owner = dir.Owner;
 
