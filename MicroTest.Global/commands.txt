@@ -34,6 +34,16 @@ DnsHostName: WinDockerSwarm.kosmopress.com
 SPNs:	"host/WinDockerSwarm", "host/WinDockerSwarm.kosmopress.com"
 PrincipalsAllowedToRetrieveManagedPassword: DockerHosts
 
+
+Get-KdsRootKey
+#if none,
+Add-KdsRootKey -EffectiveTime (Get-Date).AddHours(-10)
+#or, in prd,
+Add-KdsRootKey -EffectiveImmediately
+
+#Create security group
+New-AdGroup -Name "WebApp01Hosts" -SamAccountName "WebApp01Hosts" -Scope DomainLocal
+
 # Create the gMSA
 New-ADServiceAccount -Name "WinDockerSwarm" -DnsHostName "WinDockerSwarm.kosmopress.com" -ServicePrincipalNames "host/WinDockerSwarm", "host/WinDockerSwarm.kosmopress.com" -PrincipalsAllowedToRetrieveManagedPassword "DockerHosts"
 
@@ -41,3 +51,38 @@ New-ADServiceAccount -Name "WinDockerSwarm" -DnsHostName "WinDockerSwarm.kosmopr
 Add-ADGroupMember -Identity "WebApp01Hosts" -Members "ContainerHost01", "ContainerHost02", "ContainerHost03"
  
 New-SmbShare -Name Drop -Path c:\shares\drop -FullAccess "Everyone"
+
+Install-WindowsFeature RSAT-AD-PowerShell
+
+#Test the account on the container host
+Test-ADServiceAccount WebApp01Hosts
+
+#Create a credential spec on each container host
+Install-Module CredentialSpec
+New-CredentialSpec -AccountName WebApp01Hosts
+
+
+#Configure your app to use the gMSA
+#whatever you want to use the gMSA must run as 'Network Service' inside the container.
+
+#If you're running in IIS inside the container, put this in Dockerfile
+RUN (Get-IISAppPool DefaultAppPool).ProcessModel.IdentityType = "NetworkService"
+
+
+#If it's a Windows Service, put this in Dockerfile
+RUN sc.exe config "YourServiceName" obj= "NT AUTHORITY\NETWORK SERVICE" password= ""
+
+#If it's an arbitrary console app (which I believe self-hosted .NET Core is), put this in Dockerfile
+USER "NT AUTHORITY\NETWORK SERVICE"
+
+#RUN YOUR CONTAINER WITH A gMSA 
+#specify the credential spec file to the --security-opt parameter of docker run
+docker run --security-opt "credentialspec=file://contoso_webapp01.json" --hostname webapp01 --rm -it mcr.microsoft.com/windows/servercore:ltsc2019 powershell
+#if you want to run a shell as the gMSA:
+docker run --security-opt "credentialspec=file://contoso_webapp01.json" --hostname webapp01 --user "NT AUTHORITY\NETWORK SERVICE" --rm -it mcr.microsoft.com/windows/servercore:ltsc2019 powershell
+
+
+nltest /sc_verify:kosmopress.com
+
+#to verify the gMSA from inside the account
+klist get krbtgt

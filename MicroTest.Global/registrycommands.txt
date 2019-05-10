@@ -1,0 +1,22 @@
+A REGISTRY contains REPOSITORIES.
+A REPOSITORY contains 1 or more IMAGES -- customarily just different versions of a single image, with tags.
+
+
+docker pull registry:2
+
+docker run --rm 0t -p 5000:5000 registry:2
+
+
+
+
+add this to docker.service at /lib/systemd/system:
+
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --data-root=/mnt/sdb/dockervolumes
+
+(the ExecStart commmand will be there already, just add the --data-root bit at the end)
+
+docker volume create --name registry_filesystem
+
+docker run -it -p 5000:5000 -v registry_filesystem:/regdata registry:2
+
+docker run -it -p 5000:5000 -v registry_filesystem:/regdata -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/regdata registry:2 
