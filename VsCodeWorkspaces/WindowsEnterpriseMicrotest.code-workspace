@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.Global"
+		},
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.Api"
+		},
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.Cache"
+		},
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.FileReader"
+		},
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.Queue"
+		},
+		{
+			"path": "C:/Users/kevin/source/microtest/MicroTest.FileApi"
+		}
+	],
+	"settings": {}
+}
